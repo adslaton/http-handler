@@ -28,8 +28,8 @@ function handleRequestEvents(httpOpts, request, callback) {
         });
 
         socket.on('timeout', function () {
-            log.debug('Request took over %sms to return. Request timed out.', timeout);
-            log.debug('Options(%j):', httpOpts);
+            log.warn('Request took over %sms to return. Request timed out.', timeout);
+            log.warn('Options(%j):', httpOpts);
             request.abort();
             /* request.abort emits 'error' event which is handled below */
         });
@@ -72,7 +72,10 @@ function handleResponseEvents(httpOpts, response, request, callback) {
             callback(null, data);
         } else {
             callback({
-                error: new Error('Bad satus code: %s', response.statusCode),
+                error: {
+                    message: new Error('Bad satus code: %s', response.statusCode),
+                    statusCode: response.statusCode
+                },
                 data: data
             });
         }
