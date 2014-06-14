@@ -1,4 +1,4 @@
 http-handler
 ============
 
-Wrapper that handles http requests
+A wrapper for handling http requests
