@@ -68,13 +68,14 @@ function handleResponseEvents(httpOpts, response, request, callback) {
     });
 
     response.on('end', function () {
-        if (parseInt(response.statusCode / 100, 10) === 2) {
+        var status = response.statusCode;
+        if (parseInt(status / 100, 10) === 2) {
             callback(null, data);
         } else {
             callback({
                 error: {
-                    message: new Error('Bad satus code: %s', response.statusCode),
-                    statusCode: response.statusCode
+                    message: new Error('Bad satus code'),
+                    statusCode: status
                 },
                 data: data
             });
