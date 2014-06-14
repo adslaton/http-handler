@@ -119,7 +119,7 @@ function httpRequest(httpOpts, callback) {
 }
 
 /**
- * @module HttpUtils
+ * @module http-handler
  */
 module.exports = {
     /**
