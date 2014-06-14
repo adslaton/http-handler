@@ -13,7 +13,7 @@ var Http = require('http-handler'),
     },
     request;
     
-    request = Http.get(options, function callback () {
+    request = Http.get(options, function callback (error, data) {
         // do something
     });
 ```
@@ -34,7 +34,7 @@ var Http = require('http-handler'),
     },
     request;
     
-    request = Http.post(options, function callback () {
+    request = Http.post(options, function callback (error, data) {
         // do something
     });
 ```
