@@ -1,5 +1,5 @@
 {
-    "name": "http-handler",
+    "name": "http-utility",
     "version": "0.0.1",
     "description": "A wrapper for handling http requests",
     "main": "index.js",
