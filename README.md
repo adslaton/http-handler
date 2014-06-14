@@ -6,14 +6,14 @@ A wrapper for handling http requests
 ## Get Method
 
 ```
-var HttpUtils = require('http-handler'),
+var Http = require('http-handler'),
     // See http://nodejs.org/api/http.html#http_http_request_options_callback
     options = {
         host: 'your-host-name'
     },
     request;
     
-    request = HttpUtils.get(options, function callback () {
+    request = Http.get(options, function callback () {
         // do something
     });
 ```
@@ -21,7 +21,7 @@ var HttpUtils = require('http-handler'),
 ## Post Method
 
 ```
-var HttpUtils = require('http-handler'),
+var Http = require('http-handler'),
     // See http://nodejs.org/api/http.html#http_http_request_options_callback
     options = {
         host: 'your-host-name',
@@ -34,7 +34,7 @@ var HttpUtils = require('http-handler'),
     },
     request;
     
-    request = HttpUtils.post(options, function callback () {
+    request = Http.post(options, function callback () {
         // do something
     });
 ```
