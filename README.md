@@ -1,4 +1,4 @@
-http-handler
+http-utility
 ============
 
 A wrapper for handling http requests
@@ -12,7 +12,7 @@ var Http = require('http-handler'),
         host: 'your-host-name'
     },
     request;
-    
+
     request = Http.get(options, function callback (error, data) {
         // do something
     });
@@ -33,7 +33,7 @@ var Http = require('http-handler'),
         }
     },
     request;
-    
+
     request = Http.post(options, function callback (error, data) {
         // do something
     });
