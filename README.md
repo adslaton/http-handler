@@ -3,10 +3,14 @@ http-utility
 
 A wrapper for handling http requests
 
+```
+npm install http-utility
+```
+
 ## Get Method
 
 ```
-var Http = require('http-handler'),
+var Http = require('http-utility'),
     // See http://nodejs.org/api/http.html#http_http_request_options_callback
     options = {
         host: 'your-host-name'
@@ -21,7 +25,7 @@ var Http = require('http-handler'),
 ## Post Method
 
 ```
-var Http = require('http-handler'),
+var Http = require('http-utility'),
     // See http://nodejs.org/api/http.html#http_http_request_options_callback
     options = {
         host: 'your-host-name',
