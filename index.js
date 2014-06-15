@@ -16,28 +16,38 @@ var http = require('http'),
 function handleRequestEvents(httpOpts, request, callback) {
     var timeout = httpOpts.timeout || defaultTimeout;
 
+    request.on('connect', function(socket) {
+        log.info('Request established %s', new Date());
+    });
+
     request.on('socket', function (socket) {
         socket.setTimeout(timeout);
 
+        socket.on('connection', function () {
+            log.info('Socket connection established');
+        });
+
         socket.on('error', function (error) {
-            log.error('Socket error handling request. Options(%j):', httpOpts);
+            log.error('Socket error handling request. host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
             log.error(error.message);
             log.error(error.stack);
             request.abort();
-            /* request.abort emits 'error' event which is handled below */
         });
 
         socket.on('timeout', function () {
-            log.warn('Request took over %sms to return. Request timed out.', timeout);
-            log.warn('Options(%j):', httpOpts);
+            log.info('Request took over %sms to return. Request timed out.', timeout);
+            log.info('host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
             request.abort();
             /* request.abort emits 'error' event which is handled below */
         });
     });
 
+    request.on('finish', function () {
+        log.info('Request ended %s', new Date());        
+    });
+
     request.on('error', function (error) {
-        log.error('Error: options(%j)', httpOpts);
-        log.error(error.message);
+        log.error('HTTP error: host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
         log.error(error.stack);
         callback(error, null);
     });
@@ -61,7 +71,6 @@ function handleResponseEvents(httpOpts, response, request, callback) {
 
     response.on('error', function (error) {
         log.error('Response error. Options(%j)', httpOpts);
-        log.error(error.message);
         log.error(error.stack);
         request.abort();
         callback(error, null);
