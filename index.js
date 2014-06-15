@@ -24,35 +24,32 @@ function handleRequestEvents(httpOpts, request, callback) {
         socket.setTimeout(timeout);
 
         socket.on('connection', function () {
-            log.info('connection established');
+            log.info('Socket connection established');
         });
 
         socket.on('error', function (error) {
-            log.error('Socket error handling PAL request. host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
+            log.error('Socket error handling request. host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
             log.error(error.message);
             log.error(error.stack);
             request.abort();
-            handleError(error, httpOpts, callback);
         });
 
         socket.on('timeout', function () {
-            log.debug('Request to PAL took over %sms to return. Request timed out.', timeout);
-            log.debug('host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
+            log.info('Request took over %sms to return. Request timed out.', timeout);
+            log.info('host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
             request.abort();
             /* request.abort emits 'error' event which is handled below */
         });
     });
 
     request.on('finish', function () {
-        log.info('Request ended %s', new Date());
-        request.end();        
+        log.info('Request ended %s', new Date());        
     });
 
     request.on('error', function (error) {
         log.error('HTTP error: host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
-        log.error(error.message);
         log.error(error.stack);
-        handleError(error, httpOpts, callback);
+        //request.abort();
     });
 }
 
@@ -74,7 +71,6 @@ function handleResponseEvents(httpOpts, response, request, callback) {
 
     response.on('error', function (error) {
         log.error('Response error. Options(%j)', httpOpts);
-        log.error(error.message);
         log.error(error.stack);
         request.abort();
         callback(error, null);
