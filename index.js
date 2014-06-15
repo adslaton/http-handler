@@ -16,30 +16,43 @@ var http = require('http'),
 function handleRequestEvents(httpOpts, request, callback) {
     var timeout = httpOpts.timeout || defaultTimeout;
 
+    request.on('connect', function(socket) {
+        log.info('Request established %s', new Date());
+    });
+
     request.on('socket', function (socket) {
         socket.setTimeout(timeout);
 
+        socket.on('connection', function () {
+            log.info('connection established');
+        });
+
         socket.on('error', function (error) {
-            log.error('Socket error handling request. Options(%j):', httpOpts);
+            log.error('Socket error handling PAL request. host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
             log.error(error.message);
             log.error(error.stack);
             request.abort();
-            /* request.abort emits 'error' event which is handled below */
+            handleError(error, httpOpts, callback);
         });
 
         socket.on('timeout', function () {
-            log.warn('Request took over %sms to return. Request timed out.', timeout);
-            log.warn('Options(%j):', httpOpts);
+            log.debug('Request to PAL took over %sms to return. Request timed out.', timeout);
+            log.debug('host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
             request.abort();
             /* request.abort emits 'error' event which is handled below */
         });
     });
 
+    request.on('finish', function () {
+        log.info('Request ended %s', new Date());
+        request.end();        
+    });
+
     request.on('error', function (error) {
-        log.error('Error: options(%j)', httpOpts);
+        log.error('HTTP error: host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
         log.error(error.message);
         log.error(error.stack);
-        callback(error, null);
+        handleError(error, httpOpts, callback);
     });
 }
 
