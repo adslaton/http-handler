@@ -50,7 +50,6 @@ function handleRequestEvents(httpOpts, request, callback) {
         log.error('HTTP error: host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
         log.error(error.stack);
         callback(error, null);
-        //request.abort();
     });
 }
 
