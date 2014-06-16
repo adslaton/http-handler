@@ -19,8 +19,8 @@ function handleRequestEvents(httpOpts, request, callback) {
 
     request.on('connect', function(socket) {
         date = new Date();
-        log.info('Request established %s', date.getMilliseconds());
-        log.info('host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
+        log.info('Request established %s(ms) for:', date.getMilliseconds());
+        log.info('host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
     });
 
     request.on('socket', function (socket) {
@@ -39,7 +39,7 @@ function handleRequestEvents(httpOpts, request, callback) {
 
         socket.on('timeout', function () {
             log.info('Request took over %sms to return. Request timed out.', timeout);
-            log.info('host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
+            log.info('host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
             request.abort();
             /* request.abort emits 'error' event which is handled below */
         });
@@ -47,12 +47,12 @@ function handleRequestEvents(httpOpts, request, callback) {
 
     request.on('finish', function () {
         date = new Date();
-        log.info('Request ended %s', date.getMilliseconds());
+        log.info('Request ended %s(ms)', date.getMilliseconds());
         log.info('host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);      
     });
 
     request.on('error', function (error) {
-        log.error('HTTP error: host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
+        log.error('HTTP error: host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
         log.error(error.stack);
         callback(error, null);
     });
