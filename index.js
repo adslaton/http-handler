@@ -20,6 +20,7 @@ function handleRequestEvents(httpOpts, request, callback) {
     request.on('connect', function(socket) {
         date = new Date();
         log.info('Request established %s', date.getMilliseconds());
+        log.info('host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
     });
 
     request.on('socket', function (socket) {
@@ -46,7 +47,8 @@ function handleRequestEvents(httpOpts, request, callback) {
 
     request.on('finish', function () {
         date = new Date();
-        log.info('Request ended %s', date.getMilliseconds());        
+        log.info('Request ended %s', date.getMilliseconds());
+        log.info('host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);      
     });
 
     request.on('error', function (error) {
