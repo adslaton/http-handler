@@ -14,10 +14,12 @@ var http = require('http'),
  * @param {function} callback a function that will handle the response
  */
 function handleRequestEvents(httpOpts, request, callback) {
-    var timeout = httpOpts.timeout || defaultTimeout;
+    var timeout = httpOpts.timeout || defaultTimeout,
+        date;
 
     request.on('connect', function(socket) {
-        log.info('Request established %s', new Date());
+        date = new Date();
+        log.info('Request established %s', date.getMilliseconds());
     });
 
     request.on('socket', function (socket) {
@@ -43,7 +45,8 @@ function handleRequestEvents(httpOpts, request, callback) {
     });
 
     request.on('finish', function () {
-        log.info('Request ended %s', new Date());        
+        date = new Date();
+        log.info('Request ended %s', date.getMilliseconds());        
     });
 
     request.on('error', function (error) {
@@ -70,7 +73,7 @@ function handleResponseEvents(httpOpts, response, request, callback) {
     });
 
     response.on('error', function (error) {
-        log.error('Response error. Options(%j)', httpOpts);
+        log.error('Response error with http options (%j)', httpOpts);
         log.error(error.stack);
         request.abort();
         callback(error, null);
