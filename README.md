@@ -1,7 +1,20 @@
 http-utility
 ============
 
-A wrapper for handling http request errors.
+A wrapper for handling http request errors by capturing events around
+http requests and responses. This includes the following events:
+
+    request.connect
+    request.error
+    request.finish
+    request.socket
+    response.data
+    response.end
+    response.error
+    socket.connection
+    socket.error
+    socket.timeout
+
 
 ## Install
 
