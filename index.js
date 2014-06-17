@@ -26,8 +26,9 @@ function handleRequestEvents(httpOpts, request, callback) {
     request.on('socket', function (socket) {
         socket.setTimeout(timeout);
 
-        socket.on('connection', function () {
-            log.info('Socket connection established');
+        /* explicitly handling when the socket closes prevents false error */
+        socket.on('close', function (e) {
+            log.info('Socket closed for host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
         });
 
         socket.on('error', function (error) {
@@ -35,6 +36,7 @@ function handleRequestEvents(httpOpts, request, callback) {
             log.error(error.message);
             log.error(error.stack);
             request.abort();
+            /* request.abort emits 'error' event which is handled below */
         });
 
         socket.on('timeout', function () {
@@ -45,15 +47,11 @@ function handleRequestEvents(httpOpts, request, callback) {
         });
     });
 
-    request.on('finish', function () {
-        date = new Date();
-        log.info('Request ended %s(ms)', date.getMilliseconds());
-        log.info('host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);      
-    });
-
     request.on('error', function (error) {
         log.error('HTTP error: host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
         log.error(error.stack);
+        /* request.error triggers a request finish event */
+        request.end();
         callback(error, null);
     });
 }
