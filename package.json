@@ -18,11 +18,13 @@
         "node": ">=0.10"
     },
     "keywords": [
-        "http-utility",
-        "errors",
+        "http",
+        "error",
+        "handler",
+        "utility",
         "request",
         "response",
-        "http",
-        "https"
+        "https",
+        "errors"
     ]
 }

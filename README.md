@@ -1,13 +1,17 @@
 http-utility
 ============
 
-A wrapper for handling http requests
+A wrapper for handling http request errors.
+
+## Install
 
 ```
 npm install http-utility
 ```
 
-## Get Method
+## Usage
+
+### Get Method
 
 ```
 var Http = require('http-utility'),
@@ -22,7 +26,7 @@ var Http = require('http-utility'),
     });
 ```
 
-## Post Method
+### Post Method
 
 ```
 var Http = require('http-utility'),
