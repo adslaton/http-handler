@@ -1,6 +1,6 @@
 {
     "name": "http-utility",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A wrapper for handling http requests",
     "main": "index.js",
     "scripts": {
@@ -18,11 +18,13 @@
         "node": ">=0.10"
     },
     "keywords": [
-        "http-utility",
-        "errors",
+        "http",
+        "error",
+        "handler",
+        "utility",
         "request",
         "response",
-        "http",
-        "https"
+        "https",
+        "errors"
     ]
 }

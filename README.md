@@ -1,13 +1,31 @@
 http-utility
 ============
 
-A wrapper for handling http requests
+A wrapper for handling events around http requests and responses. This includes the following events:
+
+    request.connect
+    request.error
+    request.finish
+    request.socket
+
+    response.data
+    response.end
+    response.error
+
+    socket.connection
+    socket.error
+    socket.timeout
+
+
+## Install
 
 ```
 npm install http-utility
 ```
 
-## Get Method
+## Usage
+
+### Get Method
 
 ```
 var Http = require('http-utility'),
@@ -22,7 +40,7 @@ var Http = require('http-utility'),
     });
 ```
 
-## Post Method
+### Post Method
 
 ```
 var Http = require('http-utility'),
