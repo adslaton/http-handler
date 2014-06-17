@@ -19,7 +19,7 @@ function handleRequestEvents(httpOpts, request, callback) {
 
     request.on('connect', function(socket) {
         date = new Date();
-        log.info('Request established %s(ms) for:', date.getMilliseconds());
+        log.info('Request connect established %s(ms) for:', date.getMilliseconds());
         log.info('host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
     });
 
