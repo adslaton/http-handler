@@ -14,29 +14,54 @@ var http = require('http'),
  * @param {function} callback a function that will handle the response
  */
 function handleRequestEvents(httpOpts, request, callback) {
-    var timeout = httpOpts.timeout || defaultTimeout,
-        date;
+    var timeout = httpOpts.timeout || defaultTimeout;
+
+    request.on('close', function() {
+        log.info('Request closed host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
+        request.end();
+    });
 
     request.on('socket', function (socket) {
+        //console.log(socket._events);
         socket.setTimeout(timeout);
+
+        socket.on('end', function() {
+            log.info('Socket ended for host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
+            request.end();
+        });
+
+        socket.on('finish', function() {
+            log.info('Socket finished for host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
+            request.end();
+        });
+
+        socket.on('free', function() {
+            log.info('Socket free for host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
+            request.end();
+        });
 
         /* explicitly handling when the socket closes prevents false error */
         socket.on('close', function (e) {
             log.info('Socket closed for host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
+            request.end();
         });
 
         socket.on('error', function (error) {
             log.error('Socket error handling request. host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
             log.error(error.message);
             log.error(error.stack);
-            request.abort();
+            request.end();
+            socket.destroy();
+            //request.abort();
             /* request.abort emits 'error' event which is handled below */
         });
 
         socket.on('timeout', function () {
             log.info('Request took over %sms to return. Request timed out.', timeout);
             log.info('host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
-            request.abort();
+            socket.destroy();
+            request.end();
+            //request.abort();
             /* request.abort emits 'error' event which is handled below */
         });
     });
@@ -64,6 +89,10 @@ function handleResponseEvents(httpOpts, response, request, callback) {
 
     response.on('data', function (d) {
         data += d;
+    });
+
+    response.on('close', function () {
+        log.error('Response finish (%j)', httpOpts);
     });
 
     response.on('error', function (error) {
