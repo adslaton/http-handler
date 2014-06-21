@@ -86,10 +86,6 @@ function handleResponseEvents(httpOpts, response, request, callback) {
         data += d;
     });
 
-    response.on('close', function () {
-        log.error('Response finish (%j)', httpOpts);
-    });
-
     response.on('error', function (error) {
         log.error('Response error with http options (%j)', httpOpts);
         log.error(error.stack);
