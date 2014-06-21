@@ -22,7 +22,6 @@ function handleRequestEvents(httpOpts, request, callback) {
     });
 
     request.on('socket', function (socket) {
-        //console.log(socket._events);
         socket.setTimeout(timeout);
 
         socket.on('end', function() {
@@ -40,7 +39,6 @@ function handleRequestEvents(httpOpts, request, callback) {
             request.end();
         });
 
-        /* explicitly handling when the socket closes prevents false error */
         socket.on('close', function (e) {
             log.info('Socket closed for host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
             request.end();
@@ -52,8 +50,7 @@ function handleRequestEvents(httpOpts, request, callback) {
             log.error(error.stack);
             request.end();
             socket.destroy();
-            //request.abort();
-            /* request.abort emits 'error' event which is handled below */
+            /* request.abort() emits 'error' event which is handled below */
         });
 
         socket.on('timeout', function () {
@@ -61,15 +58,13 @@ function handleRequestEvents(httpOpts, request, callback) {
             log.info('host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
             socket.destroy();
             request.end();
-            //request.abort();
-            /* request.abort emits 'error' event which is handled below */
+            /* request.abort() emits 'error' event which is handled below */
         });
     });
 
     request.on('error', function (error) {
         log.error('HTTP error: host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
         log.error(error.stack);
-        /* request.error triggers a request finish event */
         request.end();
         callback(error, null);
     });
