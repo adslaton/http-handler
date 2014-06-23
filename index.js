@@ -3,7 +3,7 @@ var http = require('http'),
     https = require('https'),
     defaultTimeout = 6 * 1000,
     ObjectUtils = require('./utils/ObjectUtils'),
-    log = console;
+    log = require('bunyan').createLogger({ name: 'http-utility', level: 10, src: true });
 
 /**
  * Http request events handler function
