@@ -35,9 +35,9 @@ var Http = require('http-utility'),
     },
     request;
 
-    request = Http.get(options, function callback (error, data) {
-        // do something
-    });
+request = Http.get(options, function callback (error, data) {
+    // do something
+});
 ```
 
 ### Post Method
@@ -56,7 +56,7 @@ var Http = require('http-utility'),
     },
     request;
 
-    request = Http.post(options, function callback (error, data) {
-        // do something
-    });
+request = Http.post(options, function callback (error, data) {
+    // do something
+});
 ```

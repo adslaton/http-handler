@@ -1,6 +1,6 @@
 {
     "name": "http-utility",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "A wrapper for handling events around http requests and responses.",
     "main": "index.js",
     "scripts": {
@@ -13,6 +13,9 @@
     "author": {
         "name": "A.D. Slaton",
         "email": "slaton.ad@gmail.com"
+    },
+    "dependencies": {
+        "bunyan": "0.22.3"
     },
     "engines": {
         "node": ">=0.10"
