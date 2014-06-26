@@ -13,58 +13,33 @@ var http = require('http'),
  * @param {object} response http request object
  * @param {function} callback a function that will handle the response
  */
-function handleRequestEvents(httpOpts, request, callback) {
-    var timeout = httpOpts.timeout || defaultTimeout;
-
-    request.on('close', function() {
-        log.info('Request closed host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
-        request.end();
-    });
+function handleRequestEvents(server, httpOpts, request, callback) {
+    var timeout = httpOpts.timeout || defaultTimeout,
+        sockets;
 
     request.on('socket', function (socket) {
         socket.setTimeout(timeout);
-
-        socket.on('end', function() {
-            log.info('Socket ended for host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
-            request.end();
-        });
-
-        socket.on('finish', function() {
-            log.info('Socket finished for host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
-            request.end();
-        });
-
-        socket.on('free', function() {
-            log.info('Socket free for host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
-            request.end();
-        });
-
-        socket.on('close', function (e) {
-            log.info('Socket closed for host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
-            request.end();
-        });
 
         socket.on('error', function (error) {
             log.error('Socket error handling request. host(%s) port(%s) path(%s):', httpOpts.host, httpOpts.port, httpOpts.path);
             log.error(error.message);
             log.error(error.stack);
-            request.end();
             socket.destroy();
-            /* request.abort() emits 'error' event which is handled below */
+            request.end();
         });
 
         socket.on('timeout', function () {
             log.info('Request took over %sms to return. Request timed out.', timeout);
             log.info('host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
+            log.info('heapdump being created');
             socket.destroy();
             request.end();
-            /* request.abort() emits 'error' event which is handled below */
         });
     });
 
     request.on('error', function (error) {
         log.error('HTTP error: host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
-        log.error(error.stack);
+        log.error(error.stack)
         request.end();
         callback(error, null);
     });
@@ -118,12 +93,16 @@ function handleResponseEvents(httpOpts, response, request, callback) {
  */
 function getData(httpOpts, callback) {
     var server = /^https:/.test(httpOpts) ? https : http,
-        request = server.get(httpOpts, function (response) {
-            handleResponseEvents(httpOpts, response, request, callback);
-        }),
+        request,
         data;
 
-    handleRequestEvents(httpOpts, request, callback);
+    server.globalAgent.maxSockets = 10;
+
+    request = server.get(httpOpts, function (response) {
+        handleResponseEvents(httpOpts, response, request, callback);
+    });
+
+    handleRequestEvents(server, httpOpts, request, callback);
 
     if (httpOpts.method === 'POST' && ObjectUtils.exists(httpOpts.post_data)) {
         data = httpOpts.post_data;
@@ -135,6 +114,8 @@ function getData(httpOpts, callback) {
 
         request.write(data);
     }
+
+    request.end();
 }
 
 /**
