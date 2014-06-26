@@ -1,6 +1,6 @@
 {
     "name": "http-utility",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "A wrapper for handling events around http requests and responses.",
     "main": "index.js",
     "scripts": {
