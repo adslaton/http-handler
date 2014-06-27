@@ -31,8 +31,6 @@ function handleRequestEvents(server, httpOpts, request, callback) {
         socket.on('timeout', function () {
             log.info('Request took over %sms to return. Request timed out.', timeout);
             log.info('host(%s) port(%s) path(%s)', httpOpts.host, httpOpts.port, httpOpts.path);
-            log.info('heapdump being created');
-            socket.destroy();
             request.end();
         });
     });
